@@ -150,6 +150,24 @@ test_rallocx()
 }
 
 
+void
+test_nallocx()
+{
+    void *ptr;
+
+    /* MALLOCX_LG_ALIGN(x), x should be power of 2 */
+    /* align ptr address with multiple of 2^11 */
+    ptr = (void *)nallocx(3, MALLOCX_LG_ALIGN(8));
+    if (ptr != NULL){
+        printf("ptr : %p \n", ptr);
+        assert(((unsigned long)ptr % (1 << 8)) == 0);
+    }else{
+        fprintf(stderr, "ptr is NULL\n");
+    }
+
+}
+
+
 int
 main(void)
 {
@@ -158,6 +176,9 @@ main(void)
 
     printf("#### rallocx ####\n");
     test_rallocx();
+
+    printf("#### nallocx ####\n");
+    test_nallocx();
 
 #if defined(USE_JEMALLOC) && defined(STATS_PRINT)
     malloc_stats_print(NULL, NULL, NULL);
